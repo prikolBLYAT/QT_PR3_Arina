@@ -27,14 +27,14 @@
       <item>
        <widget class="QLineEdit" name="messageEdit">
         <property name="placeholderText">
-         <string>Type your message here...</string>
+         <string>Введите сообщение...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="sendButton">
         <property name="text">
-         <string>Send</string>
+         <string>Отправить</string>
         </property>
        </widget>
       </item>
@@ -45,21 +45,21 @@
       <item>
        <widget class="QPushButton" name="startServerButton">
         <property name="text">
-         <string>Start Server</string>
+         <string>Запуск сервера</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="connectButton">
         <property name="text">
-         <string>Connect to Server</string>
+         <string>Подключение </string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="showDbButton">
         <property name="text">
-         <string>Show Database</string>
+         <string>Вывод БД</string>
         </property>
        </widget>
       </item>
