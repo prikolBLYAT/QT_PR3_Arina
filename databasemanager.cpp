@@ -56,4 +56,21 @@ void DatabaseManager::logMessage(const QString &message, bool incoming)
     if (!query.exec()) {
         qDebug() << "Error logging message:" << query.lastError().text();
     }
+}
+
+QList<QPair<QString, QPair<QString, bool>>> DatabaseManager::getMessages()
+{
+    QList<QPair<QString, QPair<QString, bool>>> messages;
+    
+    QSqlQuery query("SELECT timestamp, message, direction FROM messages ORDER BY timestamp");
+    
+    while (query.next()) {
+        QString timestamp = query.value(0).toString();
+        QString message = query.value(1).toString();
+        bool isIncoming = query.value(2).toString() == "incoming";
+        
+        messages.append(qMakePair(timestamp, qMakePair(message, isIncoming)));
+    }
+    
+    return messages;
 } 

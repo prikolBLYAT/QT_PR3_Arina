@@ -29,6 +29,7 @@ private slots:
     void onConnected();
     void onDisconnected();
     void onError(const QString &errorMessage);
+    void onShowDatabase();
 
 private:
     Ui::MainWindow *ui;

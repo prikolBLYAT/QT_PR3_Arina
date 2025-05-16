@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QDateTime>
 #include <QDebug>
+#include <QList>
+#include <QPair>
 
 class DatabaseManager : public QObject
 {
@@ -17,6 +19,7 @@ public:
 
     bool openDatabase(const QString &dbPath);
     void logMessage(const QString &message, bool incoming);
+    QList<QPair<QString, QPair<QString, bool>>> getMessages();
 
 private:
     QSqlDatabase m_database;

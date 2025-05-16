@@ -2,6 +2,12 @@
 #include "ui_mainwindow.h"
 #include <QDateTime>
 #include <QCoreApplication>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QVBoxLayout>
+#include <QDialog>
+#include <QPushButton>
+#include <QHeaderView>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::onConnectToServer);
     connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::onSendMessage);
     connect(ui->messageEdit, &QLineEdit::returnPressed, this, &MainWindow::onSendMessage);
+    connect(ui->showDbButton, &QPushButton::clicked, this, &MainWindow::onShowDatabase);
     
     // Set window title
     setWindowTitle("Simple Chat");
@@ -134,4 +141,47 @@ void MainWindow::onDisconnected()
 void MainWindow::onError(const QString &errorMessage)
 {
     ui->statusbar->showMessage("Error: " + errorMessage);
+}
+
+void MainWindow::onShowDatabase()
+{
+    QDialog *dbDialog = new QDialog(this);
+    dbDialog->setWindowTitle("Database Contents");
+    dbDialog->resize(600, 400);
+    
+    QVBoxLayout *layout = new QVBoxLayout(dbDialog);
+    
+    QTableWidget *tableWidget = new QTableWidget(dbDialog);
+    tableWidget->setColumnCount(3);
+    tableWidget->setHorizontalHeaderLabels({"Timestamp", "Message", "Direction"});
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    
+    QPushButton *closeButton = new QPushButton("Close", dbDialog);
+    connect(closeButton, &QPushButton::clicked, dbDialog, &QDialog::accept);
+    
+    layout->addWidget(tableWidget);
+    layout->addWidget(closeButton);
+    
+    // Get messages from database
+    QList<QPair<QString, QPair<QString, bool>>> messages = m_databaseManager->getMessages();
+    
+    tableWidget->setRowCount(messages.size());
+    
+    for (int i = 0; i < messages.size(); ++i) {
+        QPair<QString, QPair<QString, bool>> messageData = messages.at(i);
+        
+        QString timestamp = messageData.first;
+        QString message = messageData.second.first;
+        bool isIncoming = messageData.second.second;
+        
+        QTableWidgetItem *timestampItem = new QTableWidgetItem(timestamp);
+        QTableWidgetItem *messageItem = new QTableWidgetItem(message);
+        QTableWidgetItem *directionItem = new QTableWidgetItem(isIncoming ? "Incoming" : "Outgoing");
+        
+        tableWidget->setItem(i, 0, timestampItem);
+        tableWidget->setItem(i, 1, messageItem);
+        tableWidget->setItem(i, 2, directionItem);
+    }
+    
+    dbDialog->exec();
 }
